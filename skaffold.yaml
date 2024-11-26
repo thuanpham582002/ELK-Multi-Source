@@ -1,0 +1,35 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: elk-multisource
+manifests:
+  rawYaml:
+    - k8s/*.yaml
+deploy:
+  helm:
+    releases: 
+      - name: elasticsearch
+        chartPath: elk/elasticsearch
+        skipTests: true
+        createNamespace: true
+
+      - name: logstash
+        chartPath: elk/logstash
+        skipTests: true
+        createNamespace: true
+        
+      - name: kibana
+        chartPath: elk/kibana
+        createNamespace: true
+
+      - name: filebeat-a
+        chartPath: elk/filebeat
+        skipTests: true
+        createNamespace: true
+        valuesFiles:
+          - ./elk/filebeat/values copy.yaml
+      - name: filebeat-b
+        chartPath: elk/filebeat
+        createNamespace: true
+        valuesFiles:
+          - ./elk/filebeat/values copy 2.yaml

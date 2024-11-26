@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-a
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-b
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+      - name: app1
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args: ["while true; do echo 'App1 log: $(date)'; sleep 1; done"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+      - name: app2
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args: ["while true; do echo 'App2 log: $(date)'; sleep 1; done"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
